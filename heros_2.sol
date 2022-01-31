@@ -514,7 +514,9 @@ contract HerosV2 is Ownable {
     function deliverReflections(uint256 tAmount) external {
         require(!_isExcluded[msg.sender], "Only holders that are not excluded from rewards can call this");
         uint256 currentRate =  _getRate();
-        _reflectFee(tAmount.mul(currentRate), tAmount);
+        uint256 rAmount = tAmount.mul(currentRate);
+        _rOwned[msg.sender] = _rOwned[msg.sender].sub(rAmount);
+        _reflectFee(rAmount, tAmount);
     }
 
     function _getRate() private view returns(uint256) {
